@@ -1,92 +1,56 @@
-import 'izitoast/dist/css/iziToast.min.css';
-import './css/styles.css';
-import getImagesFromServer from './js/pixabay-api';
-import createGalleryMarkup from './js/render-functions';
-import iziToast from 'izitoast';
-import cross from './img/cross.png';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+import axios from 'axios';
+import Swiper from 'swiper';
 
-const lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
+const BASE_URI = 'https://portfolio-js.b.goit.study/api/reviews';
 
-const search = document.querySelector('.search');
-const loader = document.querySelector('.loader');
-const searchForm = document.querySelector('.input-container');
-const loadMore = document.querySelector('.load-more');
-const gallery = document.querySelector('.gallery');
+const reviews = await getReviewsFromServer();
+const galleryMarkup = createGalleryMarkup(reviews);
+document.getElementById('gallery').innerHTML = galleryMarkup;
 
-const perPage = 15;
-let page;
-let searchValue;
-
-function show(selector) {
-  selector.classList.remove('is-hidden');
-}
-
-function hidden(selector) {
-  selector.classList.add('is-hidden');
-}
-
-function resetPage() {
-  gallery.innerHTML = null;
-}
-
-function showError() {
-  hidden(loadMore);
-  hidden(loader);
-  return iziToast.error({
-    message:
-      'Sorry, there are no images matching <br>your search query. Please try again!',
-    position: 'topRight',
-    backgroundColor: '#ef4040',
-    titleColor: '#ffffff',
-    messageColor: '#ffffff',
-    iconUrl: cross,
-    theme: 'dark',
-    close: false,
-  });
-}
-function scroll() {
-  const galleryItem = document.querySelector('.gallery-item');
-  if (page === 1) return;
-  const rect = galleryItem.getBoundingClientRect();
-  window.scrollBy({ behavior: 'smooth', top: (rect.height + 24) * 2 });
-}
-
-async function showImages() {
-  if (searchValue.trim() === '') {
-    showError();
-    return;
+async function getReviewsFromServer() {
+  try {
+    const response = await axios.get(BASE_URI);
+    const data = response.data;
+    console.log('Received reviews from server:', data);
+    return data;
+  } catch (error) {
+    console.error('Error while fetching reviews:', error.message);
+    throw error;
   }
-
-  show(loader);
-  const data = await getImagesFromServer(searchValue, page, perPage);
-  if (data.hits.length < 1) return showError();
-  const markup = createGalleryMarkup(data.hits);
-  gallery.insertAdjacentHTML('beforeend', markup);
-  lightbox.refresh();
-  hidden(loader);
-  if (page * perPage < data.totalHits) show(loadMore);
-  else {
-    hidden(loadMore);
-    showError();
-  }
-  scroll();
 }
 
-searchForm.addEventListener('submit', event => {
-  event.preventDefault();
-  resetPage();
-  hidden(loadMore);
-  searchValue = search.value.trim();
-  page = 1;
-  showImages();
-});
+function createGalleryMarkup(data) {
+  return `
+    <div class="swiper">
+        <p class="review-top">REVIEWS</p>
+      <div class="swiper-wrapper">
+        ${data
+          .map(
+            ({ author, avatar_url, review }) => `
+          <div class="swiper-slide">
+            <div class="gallery-item">
+              <img src="${avatar_url}" class="gallery-image" alt="${author}"/>
+                <div class="author">${author}</div>
+              <p class="review">${review}</p>
+            </div>
+          </div>
+          `
+          )
+          .join('')}
+      </div>
+               <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>`;
+}
 
-loadMore.addEventListener('click', () => {
-  page++;
-  showImages();
+const swiper = new Swiper('.swiper', {
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+  pagination: {
+    el: '.swiper-pagination',
+    type: 'bullets',
+  },
 });
