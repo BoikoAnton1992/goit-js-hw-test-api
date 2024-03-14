@@ -5,6 +5,7 @@ const BASE_URI = 'https://portfolio-js.b.goit.study/api/reviews';
 
 const reviews = await getReviewsFromServer();
 const galleryMarkup = createGalleryMarkup(reviews);
+
 document.getElementById('gallery').innerHTML = galleryMarkup;
 
 async function getReviewsFromServer() {
@@ -37,20 +38,24 @@ function createGalleryMarkup(data) {
           `
           )
           .join('')}
-      </div>
-               <div class="swiper-pagination"></div>
+                             </div>
+        <div class="swiper-pagination"></div>
         <div class="swiper-button-prev"></div>
         <div class="swiper-button-next"></div>
-    </div>`;
+    </div>
+    `;
 }
 
 const swiper = new Swiper('.swiper', {
+  direction: 'horizontal',
   navigation: {
     nextEl: '.swiper-button-next',
     prevEl: '.swiper-button-prev',
   },
+  spaceBetween: 20,
   pagination: {
     el: '.swiper-pagination',
     type: 'bullets',
+    clickable: true,
   },
 });
