@@ -96,6 +96,11 @@ h3 {
 
 /* ========== GLOBAL ==========/ */
 
+.main-container{
+  display: flex;
+  justify-content: center;
+}
+
 
 .container{
 width: 375px;
