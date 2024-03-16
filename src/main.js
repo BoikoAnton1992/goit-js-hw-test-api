@@ -1,33 +1,21 @@
-import axios from 'axios';
+'use strict';
 import Swiper from 'swiper';
+import 'swiper/css';
+import axios from 'axios';
 
 const BASE_URI = 'https://portfolio-js.b.goit.study/api/reviews';
-
-const reviews = await getReviewsFromServer();
-const galleryMarkup = createGalleryMarkup(reviews);
-
-document.getElementById('gallery').innerHTML = galleryMarkup;
+const gallery = document.querySelector('.gallery');
 
 async function getReviewsFromServer() {
   try {
-    const response = await axios.get(BASE_URI);
-    const data = response.data;
-    console.log('Received reviews from server:', data);
-    return data;
-  } catch (error) {
-    console.error('Error while fetching reviews:', error.message);
-    throw error;
-  }
-}
+    const { data } = await axios.get(BASE_URI);
 
-function createGalleryMarkup(data) {
-  return `
-    <div class="swiper">
-        <p class="review-top">REVIEWS</p>
-      <div class="swiper-wrapper">
-        ${data
-          .map(
-            ({ author, avatar_url, review }) => `
+    gallery.innerHTML = `<div class="swiper mySwiper">
+      <p class = "review">REVIEW</p>
+    <div id = "swiper-wrapper" class="swiper-wrapper">
+       ${data
+         .map(
+           ({ author, avatar_url, review }) => `
           <div class="swiper-slide">
             <div class="gallery-item">
               <img src="${avatar_url}" class="gallery-image" alt="${author}"/>
@@ -36,20 +24,55 @@ function createGalleryMarkup(data) {
             </div>
           </div>
           `
-          )
-          .join('')}
-            </div>
-            <div class= "swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
+         )
+         .join('')}
     </div>
-    `;
-}
+    <div><button id = "swiper-button-next" class="swiper-button-next">
+  <svg>
+    <use href="./arrow-narrow-right.svg"></use>
+  </svg>
+</button></div>
 
-const swiper = new Swiper('.swiper', {
-  direction: 'horizontal',
-  navigation: {
-    prevEl: '.swiper-button-prev',
-    nextEl: '.swiper-button-next',
-  },
-  spaceBetween: 20,
-});
+    <div><button id = "swiper-button-prev" class="swiper-button-prev">
+  <svg>
+    <use href="./arrow-narrow-left.svg"></use>
+  </svg>
+</button></div>
+
+  </div>`;
+
+    new Swiper('.mySwiper', {
+      slidesPerView: 1,
+      spaceBetween: 16,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      keyboard: true,
+      mausewheel: true,
+      slidesPerView: 1,
+      breakpoints: {
+        320: {
+          slidesPerView: 1,
+          spaceBetween: 16,
+        },
+        786: {
+          slidesPerView: 2,
+          spaceBetween: 16,
+        },
+        1280: {
+          slidesPerView: 3,
+          spaceBetween: 16,
+        },
+        1440: {
+          slidesPerView: 4,
+          spaceBetween: 16,
+        },
+      },
+    });
+  } catch (error) {
+    console.error('Error while fetching reviews:', error.message);
+    throw error;
+  }
+}
+getReviewsFromServer();
