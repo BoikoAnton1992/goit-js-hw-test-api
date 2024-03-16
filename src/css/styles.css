@@ -105,6 +105,7 @@ h3 {
 .container{
 width: 375px;
 background: #1c1d20;
+padding-bottom: 50px;
 }
 
 .swiper-wrapper {
@@ -157,4 +158,37 @@ border: 1px solid rgba(250, 250, 250, 0.2);
     line-height: 150%;
     letter-spacing: -0.02em;
     color: rgba(250, 250, 250, 0.6);
+}
+
+.swiper-button-prev {
+    margin-top: 49%;
+    margin-left: 105px;
+  display: block;
+  border: 1px solid rgba(250, 250, 250, 0.5);
+    border-radius: 60px;
+    padding: 14px;
+    width: 52px;
+    height: 52px;
+    background-image: url('../arrow-narrow-left.svg');
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: transparent;
+}
+
+
+.swiper-button-next {
+  margin-top: 49%;
+  margin-right: 105px;
+  display: block;
+  border: 1px solid rgba(250, 250, 250, 0.5);
+  border-radius: 60px;
+  padding: 14px;
+  width: 52px;
+  height: 52px;
+  background-image: url('../arrow-narrow-right.svg');
+  background-size: 24px;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: transparent;
 }

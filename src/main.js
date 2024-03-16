@@ -38,10 +38,9 @@ function createGalleryMarkup(data) {
           `
           )
           .join('')}
-                             </div>
-        <div class="swiper-pagination"></div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
+            </div>
+            <div class= "swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
     </div>
     `;
 }
@@ -49,13 +48,8 @@ function createGalleryMarkup(data) {
 const swiper = new Swiper('.swiper', {
   direction: 'horizontal',
   navigation: {
-    nextEl: '.swiper-button-next',
     prevEl: '.swiper-button-prev',
+    nextEl: '.swiper-button-next',
   },
   spaceBetween: 20,
-  pagination: {
-    el: '.swiper-pagination',
-    type: 'bullets',
-    clickable: true,
-  },
 });
